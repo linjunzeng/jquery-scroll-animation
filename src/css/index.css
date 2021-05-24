@@ -1,0 +1,91 @@
+.block{
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.block-1{
+    background: rgb(93, 170, 175)
+}
+.block-1 .content-box{
+    margin: 80px auto 0;
+    width: 200px;
+    height: 200px;
+}
+.block-1 .content-box li{
+    display: none;
+    width: 100%;
+    height: 100%;
+    line-height: 200px;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    background: rgb(29, 104, 173);
+    color: #fff;
+}
+.block-1 .content-box li.active{
+    display: block;
+}
+
+.block-1 .sign-box{
+    margin: 20px auto 0;
+    width: 200px;
+}
+.block-1 .sign-box li{
+    margin: 0 10px;
+    width: 40px;
+    height: 10px;
+    border-radius: 4px;
+    background: rgb(29, 104, 173);
+}
+.block-1 .sign-box li.active{
+    background: rgb(43, 138, 117);
+}
+
+.block-2{
+    background: rgb(100, 132, 219)
+}
+
+
+.block-3{
+    background: rgb(61, 110, 60)
+}
+
+.block-3 .content-box{
+    margin: 80px auto 0;
+    width: 200px;
+    height: 200px;
+}
+.block-3 .content-box li{
+    display: none;
+    width: 100%;
+    height: 100%;
+    line-height: 200px;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    background: rgb(29, 104, 173);
+    color: #fff;
+}
+.block-3 .content-box li.active{
+    display: block;
+}
+
+.block-3 .sign-box{
+    margin: 20px auto 0;
+    width: 200px;
+}
+.block-3 .sign-box li{
+    margin: 0 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgb(29, 104, 173);
+}
+.block-3 .sign-box li.active{
+    background: rgb(43, 138, 117);
+}
+
+.block-4{
+    background: rgb(151, 51, 138)
+}
