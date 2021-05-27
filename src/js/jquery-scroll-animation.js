@@ -13,8 +13,6 @@
         
         this.scrollEl = $(options.scrollEl)
         this.animationList = options.animationList
-        this.islockScroll = false
-        this.scrollTop = 0
         this.init()
     }
 
@@ -22,13 +20,13 @@
         constructor: ScrollAnimation,
         // 初始化
         init: function(){
-            let _this = this;
+            var _this = this;
 
             this.infoInit()
 
-            this.scrollEl.scroll(throttle(function(event){
+            this.scrollEl.on('scroll', throttle(function(event){
                 _this.scroll(event)
-            }, 1000))
+            }, 20))
         },
         // 数据初始化
         infoInit: function(){
@@ -50,6 +48,8 @@
         },
         // 滚动监听
         scroll: function(event){
+            console.log(1);
+            
             var scrollTop = this.scrollEl.scrollTop()
 
             // 筛选符合条件
@@ -59,28 +59,36 @@
 
 
             if(animationInfo){
-                // 锁定滚动条
-                this.islockScroll = true
-                this.scrollTop = animationInfo.top
-
+                this.unScoll()
                 animationInfo.eventList[animationInfo.index]()
                 animationInfo.index++
                 if(animationInfo.index === animationInfo.eventList.length){
                     // 完成 动画区域 事件后修改状态
                     animationInfo.status = 'success'
-
-                    // 解锁滚动条
-                    this.islockScroll = false
-                    this.scrollTop = 0
+                    this.removeUnScroll()
                 }
             }  
-            
-            if(this.islockScroll){
-                this.scrollEl.scrollTop(this.scrollTop)
-                event.stopPropagation()
-                return false;
-            }
-        }
+        },
+        unScoll: function(){
+            var _this = this;
+            var scrollTop = this.scrollEl.scrollTop()
+            $(document).on('scroll.unable',function (e) {
+                $(document).scrollTop(scrollTop);
+            })
+            this.scrollEl.off('scroll')
+            this.scrollEl.on('scroll', throttle(function(event){
+                _this.scroll(event)
+            }, 1500))
+        },
+
+        removeUnScroll: function(){
+            var _this = this;
+            $(document).unbind('scroll.unable')
+            this.scrollEl.off('scroll')
+            this.scrollEl.on('scroll', throttle(function(event){
+                _this.scroll(event)
+            }, 20))
+        },
     }
 
     // 节流
