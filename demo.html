@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo</title>
+    <link rel="stylesheet" href="./src/css/base.css">
+    <style>
+        .main-box{
+            position: relative;
+            width: 100%
+        }
+        .scroll-box{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%
+        }
+        .block{
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+        .bg1{
+            background: rgb(48, 160, 91);
+        }
+        .bg2{
+            background: rgb(29, 130, 189);
+        }
+        .bg3{
+            background: rgb(211, 30, 99);
+        }
+        .bg4{
+            background: rgb(211, 116, 27);
+        }
+
+        
+        .content-box{
+            position: relative;
+            margin: 80px auto 0;
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+        }
+        .content-box ul{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+        }
+        .content-box li{
+            width: 200px;
+            height: 100%;
+            line-height: 200px;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            background: rgb(29, 104, 173);
+            color: #fff;
+        }
+
+        .sign-box{
+            margin: 20px auto 0;
+            width: 200px;
+        }
+        .sign-box li{
+            margin: 0 10px;
+            width: 40px;
+            height: 10px;
+            border-radius: 4px;
+            background: rgb(29, 104, 173);
+        }
+        .sign-box li.active{
+            background: rgb(43, 138, 117);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-box" id="main-box">
+        <div class="scroll-box" id="scroll-box">
+            <div class="block bg1" id="block1"></div>
+            <div class="block bg2" id="block2">
+                <div class="content-box">
+                    <ul class="clearfix" style="width: 600px">
+                        <li class="fl">1</li>
+                        <li class="fl">2</li>
+                        <li class="fl">3</li>
+                    </ul>
+                </div>
+                <ul class="sign-box clearfix">
+                    <li class="sign fl active"></li>
+                    <li class="sign fl"></li>
+                    <li class="sign fl"></li>
+                </ul>
+            </div>
+            <div class="block bg1"></div>
+            <div class="block bg3" id="block3"></div>
+            <div class="block bg4" id="block4">
+                <div class="content-box">
+                    <ul class="clearfix" style="width: 600px">
+                        <li class="fl">1</li>
+                        <li class="fl">2</li>
+                        <li class="fl">3</li>
+                    </ul>
+                </div>
+                <ul class="sign-box clearfix">
+                    <li class="sign fl active"></li>
+                    <li class="sign fl"></li>
+                    <li class="sign fl"></li>
+                </ul>
+            </div>
+            <div class="block bg1"></div>
+            <div class="block bg1"></div>
+            <div class="block bg1"></div>
+        </div>
+    </div>
+<script src="./src/js/jquery-3.6.0.min.js"></script>
+<script>
+    function ScrollAnmiation(options){
+        this.outerEl = $(options.outerEl)
+        this.scrollEl = $(options.scrollEl)
+        this.animationList = options.animationList
+        this.translateTop = 0;
+
+        this.init()
+    }
+
+    ScrollAnmiation.prototype = {
+        constructor: ScrollAnmiation,
+        init: function(){
+            this.initCount()
+            $(window).on('scroll', this.scroll.bind(this))
+        },
+        // 计算最外高度 并获取 各动画容器距离顶部距离
+        initCount: function(){
+            var sumHeight = this.scrollEl.height()
+            
+            this.animationList.forEach(animation => {
+                // 没找到元素报错
+                if(!$(animation.el).length){
+                    console.error('bind el is not find');
+                    return false
+                }
+                // 距离顶部高度
+                animation.top = $(animation.el).offset().top
+                // 累计拖动高度
+                sumHeight += animation.scrollHeight
+            });
+            // 设置最外高度
+            this.outerEl.height(sumHeight + 'px')
+        },
+        scroll: function(){
+            var scrollTop = $(window).scrollTop()
+            var index = -1;
+            var sumTop = 0
+
+            
+            // 获取之前动画元素的滚动高度和
+            this.animationList.forEach((animation, key) => {
+                if(scrollTop >= animation.top + animation.scrollHeight){
+                    sumTop += animation.scrollHeight
+                }
+            })
+
+            // 筛选符合条件序号
+            this.animationList.forEach((animation, key) => {
+                if(scrollTop >= animation.top && scrollTop < animation.top + animation.scrollHeight){
+                    index = key
+                }
+            })
+
+            console.log(index, scrollTop, sumTop);
+            
+            if(index > -1) {
+                var animationInfo = this.animationList[index]
+                this.scrollEl.css('transform','translate(0, '+ (sumTop + scrollTop - animationInfo.top) +'px)')
+            } else {
+                this.scrollEl.css('transform','translate(0, '+ sumTop +'px)')
+            }
+        }
+    }
+
+    $(function(){
+        var demo = new ScrollAnmiation({
+            outerEl: '#main-box',
+            scrollEl: '#scroll-box',
+            animationList: [
+                {
+                    el: '#block2',
+                    scrollHeight: 300,
+                    eventList: [animationA, animationA]
+                },
+                {
+                    el: '#block4',
+                    scrollHeight: 300,
+                    eventList: [animationB, animationB]
+                }
+            ]
+        })
+        console.log(demo);
+        
+        function animationA(){
+            var index = $('#block2 .sign-box li.active').index() + 1
+            var width = $('#block2 .content-box li').width()
+            
+            $('#block2 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
+            $('#block2 .content-box ul').animate({
+                left: -1 * index * width
+            })
+        }
+        function animationB(){
+            var index = $('#block4 .sign-box li.active').index() + 1
+            var width = $('#block4 .content-box li').width()
+            
+            $('#block4 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
+            $('#block4 .content-box ul').animate({
+                left: -1 * index * width
+            })
+        }
+    })
+</script>
+</body>
+</html>
