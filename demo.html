@@ -122,8 +122,7 @@
         this.outerEl = $(options.outerEl)
         this.scrollEl = $(options.scrollEl)
         this.animationList = options.animationList
-        this.translateTop = 0;
-
+        
         this.init()
     }
 
@@ -135,7 +134,7 @@
         },
         // 计算最外高度 并获取 各动画容器距离顶部距离
         initCount: function(){
-            var sumHeight = this.scrollEl.height()
+            var sumHeight = 0
             
             this.animationList.forEach(animation => {
                 // 没找到元素报错
@@ -144,41 +143,44 @@
                     return false
                 }
                 // 距离顶部高度
-                animation.top = $(animation.el).offset().top
+                animation.top = sumHeight + $(animation.el).offset().top
+
                 // 累计拖动高度
                 sumHeight += animation.scrollHeight
             });
+
             // 设置最外高度
-            this.outerEl.height(sumHeight + 'px')
+            this.outerEl.height(this.scrollEl.height() + sumHeight + 'px')
         },
         scroll: function(){
-            var scrollTop = $(window).scrollTop()
-            var index = -1;
-            var sumTop = 0
+            var scrollTop = $(window).scrollTop(),
+                translateTop = 0,
+                sumTop = 0,
+                index = -1;
 
             
-            // 获取之前动画元素的滚动高度和
             this.animationList.forEach((animation, key) => {
+                // 筛选符合条件序号
+                if(scrollTop >= animation.top && scrollTop < animation.top + animation.scrollHeight){
+                    index = key
+                    this.startAnimat(scrollTop, animation)
+                }
+                // 累计动画滚动高度
                 if(scrollTop >= animation.top + animation.scrollHeight){
                     sumTop += animation.scrollHeight
                 }
             })
-
-            // 筛选符合条件序号
-            this.animationList.forEach((animation, key) => {
-                if(scrollTop >= animation.top && scrollTop < animation.top + animation.scrollHeight){
-                    index = key
-                }
-            })
-
-            console.log(index, scrollTop, sumTop);
             
             if(index > -1) {
-                var animationInfo = this.animationList[index]
-                this.scrollEl.css('transform','translate(0, '+ (sumTop + scrollTop - animationInfo.top) +'px)')
-            } else {
-                this.scrollEl.css('transform','translate(0, '+ sumTop +'px)')
+                translateTop = scrollTop - this.animationList[index].top + sumTop
             }
+            
+            this.scrollEl.css('transform','translate(0, '+ (translateTop || sumTop) +'px)')
+        },
+        // 执行动画
+        startAnimat: function(scrollTop, animation){
+            console.log('执行动画');
+            
         }
     }
 
