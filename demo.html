@@ -179,8 +179,28 @@
         },
         // 执行动画
         startAnimat: function(scrollTop, animation){
-            console.log('执行动画');
+            // 动画执行中
+           /*  if(this.isAnimat){
+                return false
+            }  */
+
+            var _this = this;
+            var top = animation.top,
+                eventList = animation.eventList,
+                scrollHeight = animation.scrollHeight;
             
+            // 执行间隔
+            var interval = scrollHeight/eventList.length
+
+            // 执行序号
+            var index = (scrollTop - top)/interval
+
+            console.log(index);
+
+            if(Math.floor(index) % 1 === 0){
+                eventList[index] && eventList[index](index)
+                console.log('执行动画');
+            }
         }
     }
 
@@ -192,19 +212,20 @@
                 {
                     el: '#block2',
                     scrollHeight: 300,
-                    eventList: [animationA, animationA]
+                    eventList: [function(){animationA(1)}, function(){animationA(2)}]
                 },
                 {
                     el: '#block4',
                     scrollHeight: 300,
-                    eventList: [animationB, animationB]
+                    eventList: [function(){animationA(0)}, function(){animationB(1)}, function(){animationB(2)}]
                 }
             ]
         })
         console.log(demo);
         
-        function animationA(){
-            var index = $('#block2 .sign-box li.active').index() + 1
+        function animationA(index){
+            console.log('animationA');
+            
             var width = $('#block2 .content-box li').width()
             
             $('#block2 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
@@ -212,8 +233,7 @@
                 left: -1 * index * width
             })
         }
-        function animationB(){
-            var index = $('#block4 .sign-box li.active').index() + 1
+        function animationB(index){
             var width = $('#block4 .content-box li').width()
             
             $('#block4 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
