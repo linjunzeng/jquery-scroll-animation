@@ -1,32 +1,42 @@
 $(function(){
-    let scrollInfo = $.scrollAnimation({
-        scrollEl: window,
-        animationList: [
-            {
-                el: '#block-1',
-                eventList: [animationA, animationA]
-            },
-            {
-                el: '#block-3',
-                eventList: [animationB, animationB, animationB]
+    let scrollInfo = $.ScrollAnimation('#main-box', {
+        animationList: [{
+            el: '#block2',
+            active({index, done}){
+                animationA(index, done)
             }
-        ]
+        },{
+            el: '#block4',
+            active({index, done}){
+                animationB(index, done)
+            }
+        }]
     })
-    function animationA(){
-        var index = $('#block-1 .sign-box li.active').index() + 1
-        var width = $('#block-1 .content-box li').width()
+
+    console.log(scrollInfo);
+    
+
+    function animationA(index, done){
+        if(index === 2){
+            done()
+        }
         
-        $('#block-1 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
-        $('#block-1 .content-box ul').animate({
+        var width = $('#block2 .content-box li').width()
+        
+        $('#block2 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
+        $('#block2 .content-box ul').animate({
             left: -1 * index * width
         })
     }
-    function animationB(){
-        var index = $('#block-3 .sign-box li.active').index() + 1
-        var width = $('#block-1 .content-box li').width()
+
+    function animationB(index, done){
+        if(index === 2){
+            done()
+        }
+        var width = $('#block4 .content-box li').width()
         
-        $('#block-3 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
-        $('#block-3 .content-box ul').animate({
+        $('#block4 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
+        $('#block4 .content-box ul').animate({
             left: -1 * index * width
         })
     }

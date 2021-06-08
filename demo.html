@@ -11,236 +11,60 @@
             position: relative;
             width: 100%
         }
-        .scroll-box{
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%
-        }
         .block{
+            position: relative;
+            width: 100%;
+            height: 1600px;
+            background: #ccc;
+        }
+        .block1{
+            position: sticky;
+            top: 0;
+            height: 800px;
+            background: rgb(21, 129, 17);
+        }
+        .block2{
+            background: rgb(213, 37, 219);
+        }
+        .block3{
+            background: rgb(168, 115, 15);
+        }
+        .other{
+            position: sticky;
+            top: 0;
+        }
+        .block-null{
             width: 100%;
             height: 400px;
-            overflow: hidden;
-        }
-        .bg1{
-            background: rgb(48, 160, 91);
-        }
-        .bg2{
-            background: rgb(29, 130, 189);
-        }
-        .bg3{
-            background: rgb(211, 30, 99);
-        }
-        .bg4{
-            background: rgb(211, 116, 27);
-        }
-
-        
-        .content-box{
-            position: relative;
-            margin: 80px auto 0;
-            width: 200px;
-            height: 200px;
-            overflow: hidden;
-        }
-        .content-box ul{
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-        }
-        .content-box li{
-            width: 200px;
-            height: 100%;
-            line-height: 200px;
-            font-size: 30px;
-            font-weight: bold;
-            text-align: center;
-            background: rgb(29, 104, 173);
-            color: #fff;
-        }
-
-        .sign-box{
-            margin: 20px auto 0;
-            width: 200px;
-        }
-        .sign-box li{
-            margin: 0 10px;
-            width: 40px;
-            height: 10px;
-            border-radius: 4px;
-            background: rgb(29, 104, 173);
-        }
-        .sign-box li.active{
-            background: rgb(43, 138, 117);
+            background: #f00;
         }
 
     </style>
 </head>
 <body>
     <div class="main-box" id="main-box">
-        <div class="scroll-box" id="scroll-box">
-            <div class="block bg1" id="block1"></div>
-            <div class="block bg2" id="block2">
-                <div class="content-box">
-                    <ul class="clearfix" style="width: 600px">
-                        <li class="fl">1</li>
-                        <li class="fl">2</li>
-                        <li class="fl">3</li>
-                    </ul>
-                </div>
-                <ul class="sign-box clearfix">
-                    <li class="sign fl active"></li>
-                    <li class="sign fl"></li>
-                    <li class="sign fl"></li>
-                </ul>
-            </div>
-            <div class="block bg1"></div>
-            <div class="block bg3" id="block3"></div>
-            <div class="block bg4" id="block4">
-                <div class="content-box">
-                    <ul class="clearfix" style="width: 600px">
-                        <li class="fl">1</li>
-                        <li class="fl">2</li>
-                        <li class="fl">3</li>
-                    </ul>
-                </div>
-                <ul class="sign-box clearfix">
-                    <li class="sign fl active"></li>
-                    <li class="sign fl"></li>
-                    <li class="sign fl"></li>
-                </ul>
-            </div>
-            <div class="block bg1"></div>
-            <div class="block bg1"></div>
-            <div class="block bg1"></div>
+        <div class="block">
+
         </div>
+        <div class="block">
+            <div class="block1">1</div>
+        </div>
+        <div class="block block2">2
+        </div>
+        <div class="block block3">3
+        </div>
+        <div class="other">
+            <div class="block-null">12</div>
+            <div class="block-null"></div>
+            <div class="block-null"></div>
+            <div class="block-null"></div>
+        </div>
+        
     </div>
 <script src="./src/js/jquery-3.6.0.min.js"></script>
 <script>
-    function ScrollAnmiation(options){
-        this.outerEl = $(options.outerEl)
-        this.scrollEl = $(options.scrollEl)
-        this.animationList = options.animationList
-        
-        this.init()
-    }
-
-    ScrollAnmiation.prototype = {
-        constructor: ScrollAnmiation,
-        init: function(){
-            this.initCount()
-            $(window).on('scroll', this.scroll.bind(this))
-        },
-        // 计算最外高度 并获取 各动画容器距离顶部距离
-        initCount: function(){
-            var sumHeight = 0
-            
-            this.animationList.forEach(animation => {
-                // 没找到元素报错
-                if(!$(animation.el).length){
-                    console.error('bind el is not find');
-                    return false
-                }
-                // 距离顶部高度
-                animation.top = sumHeight + $(animation.el).offset().top
-
-                // 累计拖动高度
-                sumHeight += animation.scrollHeight
-            });
-
-            // 设置最外高度
-            this.outerEl.height(this.scrollEl.height() + sumHeight + 'px')
-        },
-        scroll: function(){
-            var scrollTop = $(window).scrollTop(),
-                translateTop = 0,
-                sumTop = 0,
-                index = -1;
-
-            
-            this.animationList.forEach((animation, key) => {
-                // 筛选符合条件序号
-                if(scrollTop >= animation.top && scrollTop < animation.top + animation.scrollHeight){
-                    index = key
-                    this.startAnimat(scrollTop, animation)
-                }
-                // 累计动画滚动高度
-                if(scrollTop >= animation.top + animation.scrollHeight){
-                    sumTop += animation.scrollHeight
-                }
-            })
-            
-            if(index > -1) {
-                translateTop = scrollTop - this.animationList[index].top + sumTop
-            }
-            
-            this.scrollEl.css('transform','translate(0, '+ (translateTop || sumTop) +'px)')
-        },
-        // 执行动画
-        startAnimat: function(scrollTop, animation){
-            // 动画执行中
-           /*  if(this.isAnimat){
-                return false
-            }  */
-
-            var _this = this;
-            var top = animation.top,
-                eventList = animation.eventList,
-                scrollHeight = animation.scrollHeight;
-            
-            // 执行间隔
-            var interval = scrollHeight/eventList.length
-
-            // 执行序号
-            var index = (scrollTop - top)/interval
-
-            console.log(index);
-
-            if(Math.floor(index) % 1 === 0){
-                eventList[index] && eventList[index](index)
-                console.log('执行动画');
-            }
-        }
-    }
-
     $(function(){
-        var demo = new ScrollAnmiation({
-            outerEl: '#main-box',
-            scrollEl: '#scroll-box',
-            animationList: [
-                {
-                    el: '#block2',
-                    scrollHeight: 300,
-                    eventList: [function(){animationA(1)}, function(){animationA(2)}]
-                },
-                {
-                    el: '#block4',
-                    scrollHeight: 300,
-                    eventList: [function(){animationA(0)}, function(){animationB(1)}, function(){animationB(2)}]
-                }
-            ]
-        })
-        console.log(demo);
         
-        function animationA(index){
-            console.log('animationA');
-            
-            var width = $('#block2 .content-box li').width()
-            
-            $('#block2 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
-            $('#block2 .content-box ul').animate({
-                left: -1 * index * width
-            })
-        }
-        function animationB(index){
-            var width = $('#block4 .content-box li').width()
-            
-            $('#block4 .sign-box li').eq(index).addClass('active').siblings().removeClass("active")
-            $('#block4 .content-box ul').animate({
-                left: -1 * index * width
-            })
-        }
     })
 </script>
 </body>
