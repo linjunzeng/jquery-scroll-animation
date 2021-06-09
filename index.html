@@ -5,51 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>demo</title>
-    <link rel="stylesheet" href="./src/css/index.css">
     <link rel="stylesheet" href="./src/css/base.css">
+    <link rel="stylesheet" href="./src/css/swiper.css">
+    <style>
+        .section1{
+            height: 150vh;
+            background:#fcf6f0;
+        }
+        .section1 .sticky{
+            position: sticky;
+            top: 0;
+            margin: auto;
+            width: 1100px;
+            height: 100vh;
+            background: url('./src/img/section1.jpg') no-repeat bottom center;
+            background-size: 80% auto;
+        }
+        .section1 .left{
+            position: absolute;
+            left: 26%;
+            top: 29vh;
+            text-align: center;
+        }
+        .section1 .right{
+            position: absolute;
+            left: 56%;
+            top: 34vh;
+            text-align: center;
+        }
+        .section1 .headline{
+            font-size: 60px;
+            transition: all 0.2s
+        }
+        .section1 .headline.bottom{
+            margin: -10px 0 0;
+            opacity: 0;
+        }
+        .section1 .headline span{
+            display: block;
+            font-size: 19px;
+        }
+
+        .section2{
+            height: 300vh;
+            background: #f2f2f2;
+        }
+        .section2 .sticky{
+            position: sticky;
+            top: 0;
+            margin: auto;
+            width: 1100px;
+            height: 100vh;
+            background: url('./src/img/section2.jpg') no-repeat bottom center;
+            background-size: 80% auto;
+        }
+        .magnifier-box{
+            position: absolute;
+            left: 22.5%;
+            top: 34vh;
+            opacity: 0;
+            transition: all 0.4s;
+        }
+        .text{
+            position: absolute;
+            width: 80px;
+            line-height: 60px;
+            text-align: center;
+            font-size: 12px;
+            transition: all 0.4s;
+        }
+        .line{
+            position: absolute;
+            top: 30px;
+            left: 70px;
+            width: 200px;
+            height: 1px;
+            background: #aaa
+        }
+        .magnifier{
+            position: absolute;
+            top: 0;
+            left: 272px;
+            width: 60px;
+            height: 60px;
+            border: solid 1px #aaa;
+            border-radius: 50%;
+            overflow: hidden;
+            background: url('./src/img/section2.jpg') no-repeat center -570px;
+            background-size: 880px auto;
+            transition: all 0.4s;
+        }
+
+        .temp{
+            width: 100%;
+            height: 50vh;
+            background: #ccc;
+        }
+    </style>
 </head>
 <body>
     <div class="main-box" id="main-box">
-        <div class="scroll-box" id="scroll-box">
-            <div class="block bg1" id="block1"></div>
-            <div class="block bg2" id="block2">
-                <div class="content-box">
-                    <ul class="clearfix" style="width: 600px">
-                        <li class="fl">1</li>
-                        <li class="fl">2</li>
-                        <li class="fl">3</li>
-                    </ul>
+        <section class="section1" id="section1">
+            <div class="sticky">
+                <div class="left">      
+                    <h3 class="headline top">大刷新。</h3>
+                    <h3 class="headline bottom">6.1 英寸<span>超视网膜 XDR 显示屏</span></h3>
                 </div>
-                <ul class="sign-box clearfix">
-                    <li class="sign fl active"></li>
-                    <li class="sign fl"></li>
-                    <li class="sign fl"></li>
-                </ul>
-            </div>
-            <div class="block bg4" id="block4">
-                <div class="content-box">
-                    <ul class="clearfix" style="width: 600px">
-                        <li class="fl">1</li>
-                        <li class="fl">2</li>
-                        <li class="fl">3</li>
-                    </ul>
+                <div class="right">      
+                    <h3 class="headline top">小清新。</h3>
+                    <h3 class="headline bottom">5.4 英寸<span>超视网膜 XDR 显示屏</span></h3>
                 </div>
-                <ul class="sign-box clearfix">
-                    <li class="sign fl active"></li>
-                    <li class="sign fl"></li>
-                    <li class="sign fl"></li>
-                </ul>
             </div>
-            <div class="block bg1"></div>
-            <div class="block bg3" id="block3"></div>
-            <div class="block bg1"></div>
-            <div class="block bg1"></div>
-            <div class="block bg1"></div>
-        </div>
+        </section>
+        <section class="section2" id="section2">
+            <div class="sticky">
+                <div class="magnifier-box box1">
+                    <div class="text">这是开关</div>
+                    <div class="line"></div>
+                    <div class="magnifier"></div>
+                </div>
+            </div>
+        </section>
+        <section class="temp"></section>
+        <section class="temp"></section>
+        <section class="temp"></section>
     </div>
+<script src="./src/js/jquery-3.6.0.min.js"></script>
+<script src="./src/js/swiper.js"></script>
+<script>
+    $(function(){
+        $(window).scroll(function(){
+            let scrollTop = $(this).scrollTop()
 
-    <script src="./src/js/jquery-3.6.0.min.js"></script>
-    <script src="./src/js/jquery-scroll-animation.js" ></script>
-    <script src="./src/js/index.js"></script>
+            let section1Top = $('#section1').offset().top
+            let section1Height = $('#section1').height()
+            let section1stickyHeight = $('#section1 .sticky').height()
+
+            // 在 section1 的范围
+            if(scrollTop >= section1Top && scrollTop < section1Top + section1Height){
+                let index = Math.floor((scrollTop - section1Top)/(section1Height- section1stickyHeight)*100)
+                
+                if(index <= 100){
+                    $('#section1 .left').css({
+                        transform: `translate(0, -${index/2}px)`
+                    })
+                    $('#section1 .right').css({
+                        transform: `translate(0, -${index/2}px)`
+                    })
+
+                    $('#section1 .top').css({
+                        opacity: (1 - index/100).toFixed(1)
+                    })
+                    $('#section1 .bottom').css( {
+                        opacity: index/100
+                    })
+                    
+                }
+            }
+            
+
+            let section2Top = $('#section2').offset().top
+            let section2Height = $('#section2').height()
+            let section2stickyHeight = $('#section2 .sticky').height()
+
+            // 在 section2 的范围
+            if(scrollTop >= section2Top && scrollTop < section2Top + section2Height){
+                let index = Math.floor((scrollTop - section2Top)/(section2Height- section2stickyHeight)*100)
+                
+                if(index <= 10){
+                    $('#section2 .text').css({
+                        transform: 'scale(1)'
+                    })
+                    $('#section2 .magnifier').css({
+                        transform: 'scale(1)'
+                    })
+                    setTimeout(() => {
+                        $('#section2 .box1').css({
+                            opacity: 0
+                        })
+                    }, 400)
+                    
+                } else if(index > 20 && index <= 30){
+                    $('#section2 .box1').css({
+                        opacity: 1
+                    })
+                    setTimeout(() => {
+                        $('#section2 .text').css({
+                            transform: 'scale(1.2)'
+                        })
+                        $('#section2 .magnifier').css({
+                            transform: 'scale(1.5)'
+                        })
+                    }, 400)
+                }
+                /* if(index <= 100){
+                    $('#section1 .left').css({
+                        transform: `translate(0, -${index/2}px)`
+                    })
+                    $('#section1 .right').css({
+                        transform: `translate(0, -${index/2}px)`
+                    })
+
+                    $('#section1 .top').css({
+                        opacity: (1 - index/100).toFixed(1)
+                    })
+                    $('#section1 .bottom').css( {
+                        opacity: index/100
+                    })
+                    
+                } */
+            }
+        })  
+    })
+</script>
 </body>
 </html>
